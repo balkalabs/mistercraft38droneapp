@@ -1,17 +1,31 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>Joystick</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+<ion-content>
+  <ion-list inset>
+    <ion-item>
+      <ion-label stacked>IP</ion-label>
+      <ion-input [(ngModel)]="remote.adress" ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>PORT</ion-label>
+      <ion-input [(ngModel)]="remote.port"></ion-input>
+    </ion-item>
+    <button *ngIf="!connected" block ion-button full (click)="remote.connect()">Connexion</button>
+    <button *ngIf="connected" block ion-button full color="danger" (click)="remote.disconnect()">Disconnect</button>
+    <button block ion-button full (click)="testMessage()">testmessage</button>
+
+
+    <ion-item>{{ direction }}</ion-item>
+
+
+  </ion-list>
+
+  <div class="card jpad-container" #zone_jpad id="jpad"></div>
+
 </ion-content>
+
+
