@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { EnvVars } from '../../env-variables';
 
 @Component({
   selector: 'page-about',
@@ -8,7 +9,7 @@ import { NavController } from 'ionic-angular';
 export class AboutPage {
 
 
-  github_url = "https://github.com/Mistercraft38/Drone-rainbow-six"
+  github_url = EnvVars.GITHUB_URL;
 
   constructor(public navCtrl: NavController) {
 

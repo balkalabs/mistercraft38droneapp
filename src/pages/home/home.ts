@@ -5,6 +5,7 @@ import { JoystickProvider } from '../../providers/joystick/joystick';
 import * as nipplejs from 'nipplejs'
 import { JoystickData } from '../../models/joystickData-model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { EnvVars } from '../../env-variables';
 
 @Component({
   selector: 'page-home',
@@ -16,6 +17,7 @@ export class HomePage {
   connected:boolean = false;
   _connected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
+  engine:any = EnvVars.ENGINE_DIRECTION;
   jData: JoystickData = {
     angle : '',
     x : '',
@@ -92,7 +94,7 @@ export class HomePage {
       this.showAlert();
     }
     else{
-      this.remote.sendData(this.direction);
+      this.remote.sendData(this.engine[this.direction]);
     }
   }
 
