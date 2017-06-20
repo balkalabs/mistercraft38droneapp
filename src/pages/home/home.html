@@ -14,8 +14,8 @@
       <ion-label stacked>PORT</ion-label>
       <ion-input [(ngModel)]="remote.port"></ion-input>
     </ion-item>
-    <button *ngIf="!connected" block ion-button full (click)="remote.connect()">Connexion</button>
-    <button *ngIf="connected" block ion-button full color="danger" (click)="remote.disconnect()">Disconnect</button>
+    <button *ngIf="!remote.connected" block ion-button full (click)="remote.connect()">Connexion</button>
+    <button *ngIf="remote.connected" block ion-button full color="danger" (click)="remote.disconnect()">Disconnect</button>
     <button block ion-button full (click)="testMessage()">testmessage</button>
 
 

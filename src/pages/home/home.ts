@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { RemoteProvider } from '../../providers/remote/remote';
-import { AlertProvider } from '../../providers/alert/alert';
 import { JoystickProvider } from '../../providers/joystick/joystick';
 import * as nipplejs from 'nipplejs'
 import { JoystickData } from '../../models/joystickData-model';
@@ -28,7 +27,7 @@ export class HomePage {
   direction:string = null;
   _direction: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-  constructor(public alert: AlertProvider, public remote: RemoteProvider, public joystick: JoystickProvider) {
+  constructor( public remote: RemoteProvider, public joystick: JoystickProvider) {
     this.remote.connected$.subscribe((response) => {
         this.connected = response;
         this._connected.next(this.connected);
@@ -40,7 +39,9 @@ export class HomePage {
     this.joystick.direction$.subscribe((response) => {
         this.direction = response;
         this._direction.next(this.direction);
-        this.sendMessage();
+        if(this.connected){
+          this.sendMessage();
+        }
       },
       error => {
         console.log('Could not subscribe direction$ - remote.ts', this.direction, error);
@@ -64,13 +65,10 @@ export class HomePage {
     this.joystick.manager = nipplejs.create(joystick_options);
     this.joystick.joystick = this.joystick.manager.get(0);
 
-    this.joystick.joystick.on('start', function (evt, data) {
-      self.joystick.updateMessage('start');
-    });
 
     this.joystick.joystick.on('move', function (evt, data) {
       if(typeof data != 'undefined'){
-        if(data.pressure >= 0.5 && data.distance > 50){
+        if(data.pressure >= 0.4 && data.distance > 40){
           self.jData.angle = data.direction.angle;
           self.jData.x = data.direction.x;
           self.jData.y = data.direction.y;
@@ -81,30 +79,16 @@ export class HomePage {
     });
 
     this.joystick.joystick.on('end', function (evt, data) {
-      self.joystick.updateMessage('stop');
+      self.joystick.updateMessage('idle');
     });
   }
 
-  showAlert() {
-    this.alert.present('Not connected!', 'Please connect to the drone!', 'OK');
-  }
-
   sendMessage(){
-    if(!this.connected){
-      this.showAlert();
-    }
-    else{
-      this.remote.sendData(this.engine[this.direction]);
-    }
+    this.remote.sendData(this.engine[this.direction]);
   }
 
   testMessage(){
-    if(!this.connected){
-      this.showAlert();
-    }
-    else{
-      this.remote.sendData('test');
-    }
+    this.remote.sendData('128 128');
   }
 
 }

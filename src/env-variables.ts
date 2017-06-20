@@ -10,7 +10,6 @@ export class EnvVars {
       'downleft': '1 1',
       'downright': '1 1',
       'down': '1 1',
-      'start': '128 128',
-      'stop': '128 128',
+      'idle': '128 128',
     };
 }
