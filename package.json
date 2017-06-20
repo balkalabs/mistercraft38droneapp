@@ -1,9 +1,9 @@
 {
-    "name": "droneapp",
+    "name": "mistercraft38droneapp",
     "version": "0.0.1",
-    "author": "Ionic Framework",
-    "homepage": "http://ionicframework.com/",
-    "private": true,
+    "author": "Balkalabs",
+    "homepage": "https://gitlab.com/mistercraft38droneapp",
+    "private": false,
     "scripts": {
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
