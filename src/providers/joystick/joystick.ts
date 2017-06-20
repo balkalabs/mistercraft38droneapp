@@ -32,7 +32,6 @@ export class JoystickProvider {
    *      /    \
    *     / 270° \
    */
-  //6 directions: downleft & downright not implemented
   determineDirection(degree){
     if( this.between(degree, 67.5, 112.5) ){
       return 'up';
@@ -48,6 +47,12 @@ export class JoystickProvider {
     }
     if( this.between(degree, 337.5, 360) || this.between(degree, 0, 22.5) ){
       return 'right';
+    }
+    if( this.between(degree, 202.5, 247.5) ){
+      return 'downleft';
+    }
+    if( this.between(degree, 292.5, 337.5) ){
+      return 'downright';
     }
     if( this.between(degree, 247.5, 292.5) ){
       return 'down';

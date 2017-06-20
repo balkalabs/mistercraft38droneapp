@@ -7,6 +7,8 @@ export class EnvVars {
       'upright': '128 255',
       'left': '255 1',
       'right': '1 255',
+      'downleft': '1 1',
+      'downright': '1 1',
       'down': '1 1',
       'start': '128 128',
       'stop': '128 128',
