@@ -68,7 +68,7 @@ export class HomePage {
 
     this.joystick.joystick.on('move', function (evt, data) {
       if(typeof data != 'undefined'){
-        if(data.pressure >= 0.4 && data.distance > 40){
+        if(data.pressure >= 0.5 && data.distance > 50){
           self.jData.angle = data.direction.angle;
           self.jData.x = data.direction.x;
           self.jData.y = data.direction.y;
