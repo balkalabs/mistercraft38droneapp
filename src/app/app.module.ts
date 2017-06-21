@@ -11,7 +11,6 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { RemoteProvider } from '../providers/remote/remote';
-import { JoystickProvider } from '../providers/joystick/joystick';
 import { AlertProvider } from '../providers/alert/alert';
 
 @NgModule({
@@ -38,7 +37,6 @@ import { AlertProvider } from '../providers/alert/alert';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     RemoteProvider,
-    JoystickProvider,
     AlertProvider,
     AlertProvider
   ]

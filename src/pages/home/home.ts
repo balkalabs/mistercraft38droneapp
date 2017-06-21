@@ -1,9 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { RemoteProvider } from '../../providers/remote/remote';
-import { JoystickProvider } from '../../providers/joystick/joystick';
 import * as nipplejs from 'nipplejs'
-import { JoystickData } from '../../models/joystickData-model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EnvVars } from '../../env-variables';
 
 @Component({
@@ -13,40 +10,18 @@ import { EnvVars } from '../../env-variables';
 export class HomePage {
   @ViewChild('zone_jpad') zone_jpad: ElementRef;
 
-  connected:boolean = false;
-  _connected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
-
   engine:any = EnvVars.ENGINE_DIRECTION;
-  jData: JoystickData = {
-    angle : '',
-    x : '',
-    y : '',
-    degree: null
-  };
+  manager: any = null;
+  joystick: any = null;
 
   direction:string = null;
-  _direction: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-  constructor( public remote: RemoteProvider, public joystick: JoystickProvider) {
-    this.remote.connected$.subscribe((response) => {
-        this.connected = response;
-        this._connected.next(this.connected);
-      },
-      error => {
-        console.log('Could not subscribe direction$ - remote.ts', this.direction, error);
-      }
-    );
-    this.joystick.direction$.subscribe((response) => {
-        this.direction = response;
-        this._direction.next(this.direction);
-        if(this.connected){
-          this.sendMessage();
-        }
-      },
-      error => {
-        console.log('Could not subscribe direction$ - remote.ts', this.direction, error);
-      }
-    );
+  adress:string=null;
+  port:string=null;
+
+  constructor( public remote: RemoteProvider) {
+    this.adress = this.remote.default_adress;
+    this.port = this.remote.default_port;
   }
 
   ngAfterViewInit() {
@@ -62,33 +37,73 @@ export class HomePage {
       zone: this.zone_jpad.nativeElement
     };
 
-    this.joystick.manager = nipplejs.create(joystick_options);
-    this.joystick.joystick = this.joystick.manager.get(0);
+    this.manager = nipplejs.create(joystick_options);
+    this.joystick = this.manager.get(0);
 
-
-    this.joystick.joystick.on('move', function (evt, data) {
+    this.joystick.on('move', (evt, data) => {
       if(typeof data != 'undefined'){
-        if(data.pressure >= 0.5 && data.distance > 50){
-          self.jData.angle = data.direction.angle;
-          self.jData.x = data.direction.x;
-          self.jData.y = data.direction.y;
-          self.jData.degree = data.angle.degree;
-          self.joystick.updateMessage(self.joystick.determineDirection(self.jData.degree));
+        if(data.pressure >= 0.5 && data.distance > 45){
+          let newDirection = self.determineDirection(data.angle.degree);
+          self.updateDirection(newDirection);
         }
       }
     });
 
-    this.joystick.joystick.on('end', function (evt, data) {
-      self.joystick.updateMessage('idle');
+    this.joystick.on('end', () => {
+      let newDirection = 'idle';
+      self.updateDirection(newDirection);
     });
   }
 
-  sendMessage(){
-    this.remote.sendData(this.engine[this.direction]);
+  updateDirection(newDirection:string){
+    if(this.direction != newDirection){
+      this.direction = newDirection;
+      this.remote.sendData(this.engine[this.direction]);
+    }
   }
 
   testMessage(){
     this.remote.sendData('128 128');
+  }
+
+
+  private between(x, min, max) {
+    return x >= min && x <= max;
+  }
+
+  /*emulate 360° on direct orthonormed system (x' x y' y) with 0-360 on x axis
+   *     \  90° /
+   *      \    /
+   * 180°       0°/360°
+   *      /    \
+   *     / 270° \
+   */
+  determineDirection(degree){
+    if( this.between(degree, 67, 112) ){
+      return 'up';
+    }
+    if( this.between(degree, 112, 157) ){
+      return 'upleft';
+    }
+    if( this.between(degree, 22, 67) ){
+      return 'upright';
+    }
+    if( this.between(degree, 157, 202) ){
+      return 'left';
+    }
+    if( this.between(degree, 337, 360) || this.between(degree, 0, 22) ){
+      return 'right';
+    }
+    if( this.between(degree, 202, 246) ){
+      return 'downleft';
+    }
+    if( this.between(degree, 292, 337) ){
+      return 'downright';
+    }
+    if( this.between(degree, 246, 292) ){
+      return 'down';
+    }
+    return 'idle';
   }
 
 }
