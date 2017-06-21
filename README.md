@@ -1,7 +1,9 @@
 ### About:
 
 This app has been developped for [Mistercraft38's R6S drone project](https://github.com/Mistercraft38/Drone-rainbow-six).
-It is meant to be used alongside [a local node websocket test server](https://gitlab.com/mistercraft38droneapp/localservertest)
+It is meant to be used alongside [a local node TCP socket test server](https://gitlab.com/mistercraft38droneapp/localservertest)
+
+/!\ Due to usage of cordova plugins, this app will not work on emulated browser! Only real device.
 
 ### With the Ionic CLI:
 
