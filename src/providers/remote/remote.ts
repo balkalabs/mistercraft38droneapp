@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs';
 import { AlertProvider } from '../alert/alert';
-import { LoadingController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular'
+// import * as io from 'socket.io-client';
 
 @Injectable()
 export class RemoteProvider {
